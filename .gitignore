@@ -1,0 +1,12 @@
+# Rohmaterial – niemals committen (Stichpunkte, Original-Fotos, Sprachnotizen, Garmin-Screenshots)
+/raw/
+/tools/work/
+
+# Node
+/tools/node_modules/
+npm-debug.log*
+
+# System
+.DS_Store
+Thumbs.db
+*.log

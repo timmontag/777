@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Great World Race 2026 — Renn-Tagebuch</title>
+  <meta name="description" content="Persönliches Tagebuch zum Great World Race 2026, sieben Marathons auf sieben Kontinenten in sieben Tagen." />
+  <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <header id="statusbar" aria-live="polite"></header>
+
+  <section id="password-gate">
+    <div class="gate-box">
+      <h1>Great World Race 2026</h1>
+      <p>Dieses Tagebuch ist passwortgeschützt und wird direkt in deinem Browser entschlüsselt. Niemand außer dir sieht die Inhalte unverschlüsselt.</p>
+      <form id="password-form">
+        <label for="password-input" class="visually-hidden">Passwort</label>
+        <input id="password-input" type="password" autocomplete="current-password" placeholder="Passwort" required />
+        <button type="submit">Öffnen</button>
+      </form>
+      <p id="password-error" hidden>Falsches Passwort — bitte erneut versuchen.</p>
+    </div>
+  </section>
+
+  <main id="content" hidden>
+    <section id="map-section">
+      <h2 class="section-heading">Route</h2>
+      <div id="map-container"></div>
+    </section>
+
+    <section>
+      <h2 class="section-heading">Prolog</h2>
+      <div id="prolog-container"></div>
+    </section>
+
+    <section>
+      <h2 class="section-heading">Etappen</h2>
+      <div id="stages-container"></div>
+    </section>
+
+    <section>
+      <h2 class="section-heading">Epilog</h2>
+      <div id="epilog-container"></div>
+    </section>
+
+    <section id="donation-section">
+      <h2>Spenden statt Startgeschenke</h2>
+      <p>Wer diese verrückte Idee unterstützen möchte: Bitte spendet an das Elternnetzwerk <strong>gemischte Tüte e. V.</strong></p>
+      <a class="donation-button" href="https://gemischtetuete.org/spenden" target="_blank" rel="noopener">Jetzt spenden</a>
+      <p class="donation-note">Bankverbindung und Spendendetails ausschließlich auf gemischtetuete.org/spenden.</p>
+    </section>
+
+    <footer>
+      Great World Race 2026 · privates Tagebuch · nicht öffentlich indexiert
+    </footer>
+  </main>
+
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

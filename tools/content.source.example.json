@@ -1,0 +1,111 @@
+{
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet.",
+
+  "status": {
+    "phase": "race",
+    "day": 3,
+    "totalDays": 7,
+    "stageLabel": "Etappe 3 · Perth",
+    "ampel": "green",
+    "quickStatus": "Gelandet in Perth, Marathon morgen früh Ortszeit."
+  },
+
+  "prolog": {
+    "heading": "Prolog — Vorbereitung",
+    "paragraphs": ["Beispieltext zur Vorbereitung.", "Beispieltext zum Köln-Marathon als Generalprobe am 4.10."],
+    "photos": [{ "file": "prolog-1.webp", "alt": "Beispiel-Alt-Text für ein Vorbereitungsfoto" }],
+    "km0": { "lon": 6.96, "lat": 50.94, "label": "Köln-Marathon (Generalprobe)" }
+  },
+
+  "epilog": {
+    "heading": "Epilog",
+    "paragraphs": ["Beispieltext für den Rückblick nach dem Rennen."],
+    "photos": []
+  },
+
+  "stages": [
+    {
+      "id": "antarktis",
+      "name": "Antarktis / Wolf's Fang",
+      "shortName": "Antarktis",
+      "lon": 12,
+      "lat": -71.5,
+      "date": "2026-11-15",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    },
+    {
+      "id": "kapstadt",
+      "name": "Kapstadt",
+      "shortName": "Kapstadt",
+      "lon": 18.42,
+      "lat": -33.9,
+      "date": "2026-11-16",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    },
+    {
+      "id": "perth",
+      "name": "Perth",
+      "shortName": "Perth",
+      "lon": 115.86,
+      "lat": -31.95,
+      "date": "2026-11-17",
+      "status": "active",
+      "stats": { "zeit": "3:42:10", "pace": "5:16/km", "temperatur": "24°C", "puls": "156" },
+      "diary": [
+        {
+          "heading": "Zieleinlauf",
+          "paragraphs": ["Beispieltext für einen Tagebucheintrag zur Etappe."],
+          "photos": [{ "file": "perth-1.webp", "alt": "Beispiel-Alt-Text" }]
+        }
+      ]
+    },
+    {
+      "id": "singapur",
+      "name": "Singapur",
+      "shortName": "Singapur",
+      "lon": 103.82,
+      "lat": 1.35,
+      "date": "2026-11-18",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    },
+    {
+      "id": "algarve",
+      "name": "Algarve",
+      "shortName": "Algarve",
+      "lon": -8.25,
+      "lat": 37.1,
+      "date": "2026-11-19",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    },
+    {
+      "id": "cartagena",
+      "name": "Cartagena",
+      "shortName": "Cartagena",
+      "lon": -75.5,
+      "lat": 10.4,
+      "date": "2026-11-20",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    },
+    {
+      "id": "miami",
+      "name": "Miami",
+      "shortName": "Miami",
+      "lon": -80.19,
+      "lat": 25.76,
+      "date": "2026-11-21",
+      "status": "upcoming",
+      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
+      "diary": []
+    }
+  ]
+}
