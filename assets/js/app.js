@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=3';
-import { renderMap } from './map.js?v=3';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=4';
+import { renderMap } from './map.js?v=4';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -55,14 +55,20 @@ function photoGallery(photos, keyRef) {
   return `<div class="photo-gallery">${figures}</div>`;
 }
 
-function diarySection({ id, heading, paragraphs: paras, photos, stats }, extraClass = '') {
+function diarySection({ id, heading, meta, paragraphs: paras, photos, stats }, extraClass = '') {
   return `
     <section class="diary-entry ${extraClass}" id="${id ? `entry-${id}` : ''}">
       <h3>${esc(heading)}</h3>
+      ${meta ? `<p class="entry-meta">${esc(meta)}</p>` : ''}
       ${stats ? statCard(stats) : ''}
       <div class="diary-text">${paragraphs(paras)}</div>
       ${photoGallery(photos)}
     </section>`;
+}
+
+function stageMeta(stage) {
+  const date = stage.date ? stage.date.split('-').reverse().join('.') : '';
+  return [date, stage.continent].filter(Boolean).join(' · ');
 }
 
 function ampelLabel(ampel) {
@@ -93,7 +99,7 @@ function renderContent(data) {
 
   document.getElementById('map-container').innerHTML = renderMap(
     data.stages,
-    data.prolog?.km0 ? [{ label: data.prolog.km0.label.split(' (')[0] }] : []
+    data.prolog?.km0 ? [{ ...data.prolog.km0, label: data.prolog.km0.label.split(' (')[0] }] : []
   );
 
   document.getElementById('prolog-container').innerHTML = diarySection(
@@ -110,6 +116,7 @@ function renderContent(data) {
                 {
                   id: `${s.id}-${i}`,
                   heading: `Etappe ${data.stages.indexOf(s) + 1} · ${s.name}${entry.heading ? ` — ${entry.heading}` : ''}`,
+                  meta: i === 0 ? stageMeta(s) : null,
                   paragraphs: entry.paragraphs,
                   photos: entry.photos,
                   stats: i === 0 ? s.stats : null,
@@ -122,6 +129,7 @@ function renderContent(data) {
             {
               id: s.id,
               heading: `Etappe ${data.stages.indexOf(s) + 1} · ${s.name}`,
+              meta: stageMeta(s),
               paragraphs: [s.placeholder || 'Hier erscheint der Tagebucheintrag, sobald diese Etappe läuft.'],
               photos: [],
               stats: s.stats,

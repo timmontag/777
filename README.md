@@ -13,7 +13,8 @@ Klartext-Quellen und Rohfotos werden **nie** committet (siehe `.gitignore`).
 - `assets/data/crypto-meta.json` — Salt/Iterationen (unkritisch, öffentlich)
 - `assets/data/content.enc.json` — verschlüsselter Inhalt
 - `assets/data/photos/*.enc` — verschlüsselte Fotos
-- `tools/` — Node-Skripte für Fotoverarbeitung & Verschlüsselung
+- `assets/js/world-geo.js` — generierte SVG-Pfade der Weltkarte (nicht von Hand bearbeiten)
+- `tools/` — Node-Skripte für Fotoverarbeitung, Verschlüsselung & Kartenbau
 - `tools/content.source.example.json` — Schema-Dokumentation (Fantasiewerte)
 - `raw/`, `tools/work/` — Rohmaterial & Klartext-Arbeitsdateien, gitignored
 
@@ -27,6 +28,18 @@ Klartext-Quellen und Rohfotos werden **nie** committet (siehe `.gitignore`).
 
 Um bestehende Inhalte weiterzubearbeiten: `GWR_PASSWORD="..." npm run decrypt`
 entschlüsselt zurück nach `tools/work/` (gitignored).
+
+## Weltkarte
+
+`cd tools && npm run build-worldmap` erzeugt `assets/js/world-geo.js` aus
+Natural-Earth-Daten (Public Domain, via `world-atlas`, Auflösung 110m) in
+Natural-Earth-1-Projektion. Die Projektionsparameter werden mitexportiert,
+damit `assets/js/map.js` die Etappenstädte zur Laufzeit exakt deckungsgleich
+auf die Kontinent-Pfade legt. Nur nötig, wenn sich Kartengröße oder
+Detailgrad ändern sollen.
+
+Die Position einer Etappe auf der Karte kommt aus `lon`/`lat` im Content,
+die Platzierung der Beschriftung aus `labelPos` (`top`, `bottom`, `left`, `right`).
 
 ## Sicherheit
 
