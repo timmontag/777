@@ -13,13 +13,11 @@
   --ampel-yellow: #d99a00;
   --ampel-red: #d13b3b;
 
-  --map-bg: #1c2b6b;
-  --map-upcoming: #5b68ab;
+  --map-upcoming: #c7cce3;
   --map-active: var(--ampel-yellow);
   --map-done: var(--ampel-green);
-  --map-extra: #aab2dd;
-  --map-route: #ffffff;
-  --map-grid: #34418f;
+  --map-extra: #9aa1c9;
+  --map-ring: #d3d7ec;
 
   color-scheme: light;
 }
@@ -190,52 +188,64 @@ main {
   margin: 2rem 0 0.8rem;
 }
 
-/* Karte */
+/* Karte: stilisierter Globus mit Umlaufbahn */
 #map-section {
   margin-top: 1rem;
+}
+
+#map-container {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem 0.5rem;
+  box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
 }
 
 .world-map {
   width: 100%;
   height: auto;
-  border-radius: 12px;
-  background: var(--map-bg);
+  display: block;
 }
 
-.map-bg {
-  fill: var(--map-bg);
+.globe-land {
+  fill: #5f8f68;
+  opacity: 0.85;
 }
 
-.graticule {
-  stroke: var(--map-grid);
+.globe-meridian,
+.globe-equator {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.28);
   stroke-width: 1;
 }
 
-.equator {
-  stroke: var(--map-grid);
+.orbit-ring {
+  fill: none;
+  stroke: var(--map-ring);
   stroke-width: 1.5;
-  stroke-dasharray: 4 4;
+  stroke-dasharray: 5 6;
 }
 
-.route-line {
-  stroke: var(--map-route);
-  stroke-width: 2.5;
-  stroke-dasharray: 6 6;
-}
-
-.marker-label {
+.route-label {
   fill: var(--text);
-  font-size: 13px;
+  font-size: 11.5px;
   font-weight: 600;
-  paint-order: stroke;
-  stroke: var(--map-bg);
-  stroke-width: 3px;
 }
 
-.marker-label-extra {
+.extra-leader {
+  stroke: var(--map-ring);
+  stroke-width: 1;
+  stroke-dasharray: 2 3;
+}
+
+.extra-dot {
+  fill: var(--map-extra);
+}
+
+.extra-label {
   fill: var(--text-muted);
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .marker-pulse {
