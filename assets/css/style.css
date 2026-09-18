@@ -13,11 +13,14 @@
   --ampel-yellow: #d99a00;
   --ampel-red: #d13b3b;
 
-  --map-upcoming: #c7cce3;
+  --map-upcoming: #7b86b5;
   --map-active: var(--ampel-yellow);
   --map-done: var(--ampel-green);
-  --map-extra: #9aa1c9;
-  --map-ring: #d3d7ec;
+  --map-extra: #6f7aa8;
+  --map-ocean: #edf2fc;
+  --map-land: #c1cbe6;
+  --map-land-stroke: #a4b0d6;
+  --map-outline: #ccd5ed;
 
   color-scheme: light;
 }
@@ -188,7 +191,7 @@ main {
   margin: 2rem 0 0.8rem;
 }
 
-/* Karte: stilisierter Globus mit Umlaufbahn */
+/* Karte: Atlas-Weltkarte mit Etappenstädten */
 #map-section {
   margin-top: 1rem;
 }
@@ -197,8 +200,12 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 1rem 0.5rem;
+  padding: 0.9rem 0.8rem 1rem;
   box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
+}
+
+.map-wrap {
+  position: relative;
 }
 
 .world-map {
@@ -207,45 +214,131 @@ main {
   display: block;
 }
 
-.globe-land {
-  fill: #5f8f68;
-  opacity: 0.85;
+.map-ocean {
+  fill: var(--map-ocean);
+  stroke: var(--map-outline);
+  stroke-width: 0.8;
 }
 
-.globe-meridian,
-.globe-equator {
+.map-graticule {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.28);
-  stroke-width: 1;
+  stroke: #ffffff;
+  stroke-width: 0.5;
+  opacity: 0.75;
 }
 
-.orbit-ring {
+.map-land {
+  fill: var(--map-land);
+  stroke: var(--map-land-stroke);
+  stroke-width: 0.5;
+  stroke-linejoin: round;
+}
+
+.map-route {
   fill: none;
-  stroke: var(--map-ring);
-  stroke-width: 1.5;
-  stroke-dasharray: 5 6;
+  stroke-linecap: round;
 }
 
-.route-label {
-  fill: var(--text);
-  font-size: 11.5px;
-  font-weight: 600;
+.map-route-todo {
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-dasharray: 5 4;
+  opacity: 0.5;
 }
 
-.extra-leader {
-  stroke: var(--map-ring);
-  stroke-width: 1;
-  stroke-dasharray: 2 3;
+.map-route-done {
+  stroke: var(--map-done);
+  stroke-width: 2.2;
 }
 
-.extra-dot {
+.map-dot {
+  stroke: #ffffff;
+  stroke-width: 1.8;
+}
+
+.map-dot-extra {
   fill: var(--map-extra);
+  stroke: #ffffff;
+  stroke-width: 1.2;
 }
 
-.extra-label {
-  fill: var(--text-muted);
-  font-size: 10px;
-  font-weight: 500;
+/* Labels liegen als HTML über der Karte, damit sie auf jedem Display
+   gleich groß und lesbar bleiben. */
+.pin-label {
+  position: absolute;
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  pointer-events: none;
+  text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 2px #fff, 0 0 1px #fff;
+}
+
+.pin-label--top {
+  transform: translate(-50%, -160%);
+}
+
+.pin-label--bottom {
+  transform: translate(-50%, 55%);
+}
+
+.pin-label--left {
+  transform: translate(calc(-100% - 7px), -50%);
+}
+
+.pin-label--right {
+  transform: translate(7px, -50%);
+}
+
+.pin-label--extra {
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.map-legend {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.35rem 0.7rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  font-size: 0.73rem;
+}
+
+.map-legend li {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-city {
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.legend-continent {
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.map-caption {
+  text-align: center;
+  margin: 0.9rem 0 0;
+  font-size: 0.68rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .marker-pulse {
@@ -279,8 +372,15 @@ main {
 }
 
 .diary-entry h3 {
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.35rem;
   font-size: 1.05rem;
+}
+
+.entry-meta {
+  margin: 0 0 0.8rem;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
 }
 
 .stage-upcoming {

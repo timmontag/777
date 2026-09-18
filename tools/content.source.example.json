@@ -1,6 +1,5 @@
 {
-  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet.",
-
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung neben dem Kartenpunkt.",
   "status": {
     "phase": "race",
     "day": 3,
@@ -9,103 +8,171 @@
     "ampel": "green",
     "quickStatus": "Gelandet in Perth, Marathon morgen früh Ortszeit."
   },
-
   "prolog": {
     "heading": "Prolog — Vorbereitung",
-    "paragraphs": ["Beispieltext zur Vorbereitung.", "Beispieltext zum Köln-Marathon als Generalprobe am 4.10."],
-    "photos": [{ "file": "prolog-1.webp", "alt": "Beispiel-Alt-Text für ein Vorbereitungsfoto" }],
-    "km0": { "lon": 6.96, "lat": 50.94, "label": "Köln-Marathon (Generalprobe)" }
+    "paragraphs": [
+      "Beispieltext zur Vorbereitung.",
+      "Beispieltext zum Köln-Marathon als Generalprobe am 4.10."
+    ],
+    "photos": [
+      {
+        "file": "prolog-1.webp",
+        "alt": "Beispiel-Alt-Text für ein Vorbereitungsfoto"
+      }
+    ],
+    "km0": {
+      "lon": 6.96,
+      "lat": 50.94,
+      "label": "Köln-Marathon (Generalprobe)",
+      "labelPos": "right"
+    }
   },
-
   "epilog": {
     "heading": "Epilog",
-    "paragraphs": ["Beispieltext für den Rückblick nach dem Rennen."],
+    "paragraphs": [
+      "Beispieltext für den Rückblick nach dem Rennen."
+    ],
     "photos": []
   },
-
   "stages": [
     {
       "id": "antarktis",
       "name": "Antarktis / Wolf's Fang",
       "shortName": "Antarktis",
-      "lon": 12,
-      "lat": -71.5,
+      "continent": "Antarktika",
+      "lon": 8.8367,
+      "lat": -71.5275,
       "date": "2026-11-15",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "bottom"
     },
     {
       "id": "kapstadt",
       "name": "Kapstadt",
       "shortName": "Kapstadt",
-      "lon": 18.42,
-      "lat": -33.9,
+      "continent": "Afrika",
+      "lon": 18.424,
+      "lat": -33.925,
       "date": "2026-11-16",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "top"
     },
     {
       "id": "perth",
       "name": "Perth",
       "shortName": "Perth",
-      "lon": 115.86,
-      "lat": -31.95,
+      "continent": "Australien",
+      "lon": 115.857,
+      "lat": -31.953,
       "date": "2026-11-17",
       "status": "active",
-      "stats": { "zeit": "3:42:10", "pace": "5:16/km", "temperatur": "24°C", "puls": "156" },
+      "stats": {
+        "zeit": "3:42:10",
+        "pace": "5:16/km",
+        "temperatur": "24°C",
+        "puls": "156"
+      },
       "diary": [
         {
           "heading": "Zieleinlauf",
-          "paragraphs": ["Beispieltext für einen Tagebucheintrag zur Etappe."],
-          "photos": [{ "file": "perth-1.webp", "alt": "Beispiel-Alt-Text" }]
+          "paragraphs": [
+            "Beispieltext für einen Tagebucheintrag zur Etappe."
+          ],
+          "photos": [
+            {
+              "file": "perth-1.webp",
+              "alt": "Beispiel-Alt-Text"
+            }
+          ]
         }
-      ]
+      ],
+      "labelPos": "bottom"
     },
     {
       "id": "singapur",
       "name": "Singapur",
       "shortName": "Singapur",
+      "continent": "Asien",
       "lon": 103.82,
-      "lat": 1.35,
+      "lat": 1.352,
       "date": "2026-11-18",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "top"
     },
     {
       "id": "algarve",
       "name": "Algarve",
       "shortName": "Algarve",
-      "lon": -8.25,
+      "continent": "Europa",
+      "lon": -8.2,
       "lat": 37.1,
       "date": "2026-11-19",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "bottom"
     },
     {
       "id": "cartagena",
       "name": "Cartagena",
       "shortName": "Cartagena",
-      "lon": -75.5,
-      "lat": 10.4,
+      "continent": "Südamerika",
+      "lon": -75.479,
+      "lat": 10.391,
       "date": "2026-11-20",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "bottom"
     },
     {
       "id": "miami",
       "name": "Miami",
       "shortName": "Miami",
-      "lon": -80.19,
-      "lat": 25.76,
+      "continent": "Nordamerika",
+      "lon": -80.194,
+      "lat": 25.775,
       "date": "2026-11-21",
       "status": "upcoming",
-      "stats": { "zeit": null, "pace": null, "temperatur": null, "puls": null },
-      "diary": []
+      "stats": {
+        "zeit": null,
+        "pace": null,
+        "temperatur": null,
+        "puls": null
+      },
+      "diary": [],
+      "labelPos": "top"
     }
   ]
 }
