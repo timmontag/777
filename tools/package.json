@@ -1,0 +1,16 @@
+{
+  "name": "gwr-tools",
+  "version": "1.0.0",
+  "description": "Build-Tools für das Great World Race Renn-Tagebuch: Fotoverarbeitung (WebP, EXIF-Entfernung) und clientseitig kompatible AES-Verschlüsselung der Inhalte.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "process-photos": "node process-photos.mjs",
+    "encrypt": "node encrypt-content.mjs",
+    "decrypt": "node decrypt-content.mjs"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "sharp": "^0.35.4"
+  }
+}
