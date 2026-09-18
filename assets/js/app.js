@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js';
-import { renderMap } from './map.js';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=3';
+import { renderMap } from './map.js?v=3';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -93,7 +93,7 @@ function renderContent(data) {
 
   document.getElementById('map-container').innerHTML = renderMap(
     data.stages,
-    data.prolog?.km0 ? [data.prolog.km0] : []
+    data.prolog?.km0 ? [{ label: data.prolog.km0.label.split(' (')[0] }] : []
   );
 
   document.getElementById('prolog-container').innerHTML = diarySection(

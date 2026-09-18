@@ -1,21 +1,21 @@
-// Stilisierte Weltkarte (Äquidistante Gitter-Darstellung, keine exakte Kartografie)
-// mit der Etappen-Route des Great World Race.
+// Stilisierter Globus mit Umlaufbahn: die 7 Etappen liegen als Stationen
+// auf einer Ellipse, die die Erdkugel umrundet – bewusst kein exaktes
+// Kartenprojekt, sondern eine klar lesbare "Weltreise"-Illustration.
 
-const VB_W = 1000;
-const VB_H = 500;
+const VB_W = 480;
+const VB_H = 380;
+const CX = 240;
+const CY = 185;
+const GLOBE_R = 85;
+const ORBIT_RX = 150;
+const ORBIT_RY = 100;
+const LABEL_RX = ORBIT_RX + 34;
+const LABEL_RY = ORBIT_RY + 30;
 
-function project(lon, lat) {
-  const x = ((lon + 180) / 360) * VB_W;
-  const y = ((90 - lat) / 180) * VB_H;
-  return [x, y];
+function onEllipse(angleDeg, rx, ry) {
+  const rad = (angleDeg * Math.PI) / 180;
+  return [CX + rx * Math.sin(rad), CY - ry * Math.cos(rad)];
 }
-
-const AMPEL_COLOR = {
-  green: 'var(--ampel-green)',
-  yellow: 'var(--ampel-yellow)',
-  red: 'var(--ampel-red)',
-  grey: 'var(--map-upcoming)',
-};
 
 function statusColor(status) {
   if (status === 'done') return 'var(--map-done)';
@@ -23,64 +23,71 @@ function statusColor(status) {
   return 'var(--map-upcoming)';
 }
 
-function graticule() {
-  let svg = '';
-  for (let lon = -180; lon <= 180; lon += 30) {
-    const [x] = project(lon, 0);
-    svg += `<line x1="${x}" y1="0" x2="${x}" y2="${VB_H}" class="graticule" />`;
-  }
-  for (let lat = -60; lat <= 60; lat += 30) {
-    const [, y] = project(0, lat);
-    svg += `<line x1="0" y1="${y}" x2="${VB_W}" y2="${y}" class="graticule" />`;
-  }
-  const [, equatorY] = project(0, 0);
-  svg += `<line x1="0" y1="${equatorY}" x2="${VB_W}" y2="${equatorY}" class="equator" />`;
-  return svg;
-}
+const LAND_BLOBS = [
+  'M -55,-38 C -36,-58 -6,-52 8,-38 C 20,-24 14,-4 -6,2 C -30,8 -66,-8 -55,-38 Z',
+  'M 22,-8 C 46,-20 64,2 54,22 C 45,40 16,44 6,26 C -3,8 4,2 22,-8 Z',
+  'M -34,22 C -12,10 14,26 4,46 C -6,62 -38,56 -48,40 C -57,26 -48,30 -34,22 Z',
+  'M 30,-52 C 40,-58 50,-50 46,-42 C 42,-34 28,-34 26,-42 C 24,-48 24,-50 30,-52 Z',
+];
 
-function routePath(points) {
-  if (points.length < 2) return '';
-  let d = `M ${points[0][0]} ${points[0][1]}`;
-  for (let i = 1; i < points.length; i++) {
-    const [x0, y0] = points[i - 1];
-    const [x1, y1] = points[i];
-    const mx = (x0 + x1) / 2;
-    const my = (y0 + y1) / 2 - Math.abs(x1 - x0) * 0.08;
-    d += ` Q ${mx} ${my} ${x1} ${y1}`;
-  }
-  return `<path d="${d}" class="route-line" fill="none" />`;
+function globe() {
+  const land = LAND_BLOBS.map((d) => `<path d="${d}" class="globe-land" />`).join('');
+  return `
+    <defs>
+      <radialGradient id="globeShade" cx="34%" cy="28%" r="75%">
+        <stop offset="0%" stop-color="#3d4fa0" />
+        <stop offset="100%" stop-color="#161f57" />
+      </radialGradient>
+      <clipPath id="globeClip">
+        <circle cx="${CX}" cy="${CY}" r="${GLOBE_R}" />
+      </clipPath>
+    </defs>
+    <circle cx="${CX}" cy="${CY}" r="${GLOBE_R}" fill="url(#globeShade)" />
+    <g clip-path="url(#globeClip)" transform="translate(${CX} ${CY})">
+      ${land}
+    </g>
+    <ellipse cx="${CX}" cy="${CY}" rx="${GLOBE_R * 0.42}" ry="${GLOBE_R}" class="globe-meridian" />
+    <ellipse cx="${CX}" cy="${CY}" rx="${GLOBE_R * 0.78}" ry="${GLOBE_R}" class="globe-meridian" />
+    <ellipse cx="${CX}" cy="${CY}" rx="${GLOBE_R}" ry="${GLOBE_R * 0.3}" class="globe-equator" />
+  `;
 }
 
 export function renderMap(stages, extras = []) {
-  const points = stages.map((s) => project(s.lon, s.lat));
+  const n = stages.length;
+  const points = stages.map((_, i) => onEllipse((i * 360) / n, ORBIT_RX, ORBIT_RY));
 
   let markers = '';
   stages.forEach((s, i) => {
     const [x, y] = points[i];
-    const pulse = s.status === 'active' ? '<circle class="marker-pulse" r="14"></circle>' : '';
+    const angle = (i * 360) / n;
+    const [lx, ly] = onEllipse(angle, LABEL_RX, LABEL_RY);
+    const pulse = s.status === 'active' ? '<circle class="marker-pulse" r="13"></circle>' : '';
     markers += `
-      <g class="marker" transform="translate(${x} ${y})" data-stage="${s.id}">
-        ${pulse}
-        <circle r="7" fill="${statusColor(s.status)}" stroke="#fff" stroke-width="1.5" />
-        <text x="0" y="-12" text-anchor="middle" class="marker-label">${i + 1}. ${s.shortName}</text>
+      <g class="marker" data-stage="${s.id}">
+        <g transform="translate(${x} ${y})">
+          ${pulse}
+          <circle r="7" fill="${statusColor(s.status)}" stroke="#fff" stroke-width="2" />
+        </g>
+        <text x="${lx}" y="${ly}" text-anchor="middle" class="route-label">${i + 1}. ${s.shortName}</text>
       </g>`;
   });
 
   let extraMarkers = '';
-  extras.forEach((e) => {
-    const [x, y] = project(e.lon, e.lat);
+  extras.forEach((e, i) => {
+    const ex = CX - ORBIT_RX - 8;
+    const ey = CY - ORBIT_RY - 10 - i * 26;
     extraMarkers += `
-      <g class="marker marker-extra" transform="translate(${x} ${y})">
-        <circle r="4" fill="var(--map-extra)" stroke="#fff" stroke-width="1" />
-        <text x="0" y="14" text-anchor="middle" class="marker-label marker-label-extra">${e.label}</text>
+      <g class="extra-marker">
+        <line x1="${ex}" y1="${ey}" x2="${CX - GLOBE_R * 0.6}" y2="${CY - GLOBE_R * 0.7}" class="extra-leader" />
+        <circle cx="${ex}" cy="${ey}" r="4" class="extra-dot" />
+        <text x="${ex}" y="${ey - 9}" text-anchor="middle" class="extra-label">${e.label}</text>
       </g>`;
   });
 
   return `
-    <svg viewBox="0 0 ${VB_W} ${VB_H}" role="img" aria-label="Weltkarte mit der Route des Great World Race" class="world-map">
-      <rect x="0" y="0" width="${VB_W}" height="${VB_H}" class="map-bg" />
-      ${graticule()}
-      ${routePath(points)}
+    <svg viewBox="0 0 ${VB_W} ${VB_H}" role="img" aria-label="Weltkugel mit der Route des Great World Race" class="world-map">
+      <ellipse cx="${CX}" cy="${CY}" rx="${ORBIT_RX}" ry="${ORBIT_RY}" class="orbit-ring" />
+      ${globe()}
       ${extraMarkers}
       ${markers}
     </svg>`;
