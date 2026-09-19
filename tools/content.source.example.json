@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung neben dem Kartenpunkt.",
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise und menschen: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport.",
   "status": {
     "phase": "race",
     "day": 3,
@@ -34,6 +34,12 @@
     ],
     "photos": []
   },
+  "prerace": {
+    "heading": "Vorbereitung, Race Briefing und Teaming up in Kapstadt",
+    "meta": "Kapstadt · vor dem Start",
+    "status": "upcoming",
+    "sections": {}
+  },
   "stages": [
     {
       "id": "antarktis",
@@ -50,8 +56,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "bottom"
+      "labelPos": "bottom",
+      "sections": {}
     },
     {
       "id": "kapstadt",
@@ -68,8 +74,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "top"
+      "labelPos": "top",
+      "sections": {}
     },
     {
       "id": "perth",
@@ -86,11 +92,20 @@
         "temperatur": "24°C",
         "puls": "156"
       },
-      "diary": [
-        {
-          "heading": "Zieleinlauf",
+      "labelPos": "bottom",
+      "sections": {
+        "sport": {
+          "summary": "Beispiel-Kurzzusammenfassung zum Laufen und Körpergefühl.",
+          "status": "green",
           "paragraphs": [
-            "Beispieltext für einen Tagebucheintrag zur Etappe."
+            "Beispiel für den ausklappbaren Text zur sportlichen Seite."
+          ],
+          "photos": []
+        },
+        "reise": {
+          "summary": "Beispiel-Kurzüberschrift zu Reise und Logistik.",
+          "paragraphs": [
+            "Beispiel für den ausklappbaren Reisetext."
           ],
           "photos": [
             {
@@ -98,9 +113,15 @@
               "alt": "Beispiel-Alt-Text"
             }
           ]
+        },
+        "menschen": {
+          "summary": "Beispiel-Kurzüberschrift zu Menschen und Begegnungen.",
+          "paragraphs": [
+            "Beispiel für den ausklappbaren Text über Begegnungen."
+          ],
+          "photos": []
         }
-      ],
-      "labelPos": "bottom"
+      }
     },
     {
       "id": "singapur",
@@ -117,8 +138,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "top"
+      "labelPos": "top",
+      "sections": {}
     },
     {
       "id": "algarve",
@@ -135,8 +156,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "bottom"
+      "labelPos": "bottom",
+      "sections": {}
     },
     {
       "id": "cartagena",
@@ -153,8 +174,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "bottom"
+      "labelPos": "bottom",
+      "sections": {}
     },
     {
       "id": "miami",
@@ -171,8 +192,8 @@
         "temperatur": null,
         "puls": null
       },
-      "diary": [],
-      "labelPos": "top"
+      "labelPos": "top",
+      "sections": {}
     }
   ]
 }

@@ -41,6 +41,21 @@ Detailgrad ändern sollen.
 Die Position einer Etappe auf der Karte kommt aus `lon`/`lat` im Content,
 die Platzierung der Beschriftung aus `labelPos` (`top`, `bottom`, `left`, `right`).
 
+## Aufbau eines Tages
+
+Jeder Tag (`prerace` sowie jede Etappe in `stages`) hat drei Rubriken unter
+`sections`:
+
+| Rubrik | Inhalt |
+| --- | --- |
+| `sport` | Sport & Körpergefühl — `summary` als Kurzzusammenfassung, optionaler `status` (`green`/`yellow`/`red`) als Ampelpunkt, die Garmin-Kennzahlen aus `stats` und der ausklappbare Text |
+| `reise` | Reise & Logistik — Kurzüberschrift plus ausklappbarer Text |
+| `menschen` | Menschen & Begegnungen — Kurzüberschrift plus ausklappbarer Text |
+
+Jede Rubrik kennt `summary` (immer sichtbar), `paragraphs` (ausklappbar) und
+`photos`. Rubriken ohne Inhalt erscheinen ausgegraut mit „folgt". `prerace` ist
+der Auftakt-Abschnitt in Kapstadt vor der ersten Etappe.
+
 ## Sicherheit
 
 - `robots.txt` (Disallow: /) + `<meta name="robots" content="noindex,...">`

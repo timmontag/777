@@ -395,6 +395,104 @@ main {
   border-color: var(--ampel-green);
 }
 
+/* Rubriken pro Tag: Sport, Reise, Menschen – aufklappbar */
+.rubrics {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.9rem;
+}
+
+.rubric {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+}
+
+.rubric > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 0.6rem 0.75rem;
+  display: block;
+}
+
+.rubric > summary::-webkit-details-marker {
+  display: none;
+}
+
+.rubric > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.rubric-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.rubric-label {
+  font-size: 0.67rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.rubric-status {
+  width: 10px;
+  height: 10px;
+}
+
+.rubric-chevron {
+  margin-left: auto;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--text-muted);
+  border-bottom: 2px solid var(--text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+details.rubric[open] .rubric-chevron {
+  transform: rotate(-135deg);
+}
+
+.rubric-summary {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.88rem;
+}
+
+.rubric--empty,
+.rubric--flat {
+  padding: 0.6rem 0.75rem;
+}
+
+.rubric--empty {
+  opacity: 0.65;
+}
+
+.rubric--empty .rubric-summary {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.rubric-body {
+  padding: 0 0.75rem 0.85rem;
+}
+
+.rubric-body .stat-card {
+  background: var(--card);
+  margin-bottom: 0.8rem;
+}
+
+.rubric-body .diary-text p:last-child {
+  margin-bottom: 0;
+}
+
 .diary-text p {
   margin: 0 0 0.7rem;
   font-size: 0.96rem;
