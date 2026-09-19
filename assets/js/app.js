@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=8';
-import { renderMap } from './map.js?v=8';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=9';
+import { renderMap } from './map.js?v=9';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
