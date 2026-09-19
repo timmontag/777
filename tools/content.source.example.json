@@ -4,7 +4,7 @@
     "phase": "race",
     "day": 3,
     "totalDays": 7,
-    "stageLabel": "Etappe 3 · Perth",
+    "stageLabel": "Etappe 3 · Perth / Australien",
     "ampel": "green",
     "quickStatus": "Gelandet in Perth, Marathon morgen früh Ortszeit."
   },
@@ -36,7 +36,7 @@
   },
   "prerace": {
     "heading": "Vorbereitung, Race Briefing und Teaming up in Kapstadt",
-    "meta": "Kapstadt · vor dem Start",
+    "meta": "Kapstadt / Südafrika · vor dem Start",
     "status": "upcoming",
     "sections": {}
   },
@@ -61,7 +61,7 @@
     },
     {
       "id": "kapstadt",
-      "name": "Kapstadt",
+      "name": "Kapstadt / Südafrika",
       "shortName": "Kapstadt",
       "continent": "Afrika",
       "lon": 18.424,
@@ -79,7 +79,7 @@
     },
     {
       "id": "perth",
-      "name": "Perth",
+      "name": "Perth / Australien",
       "shortName": "Perth",
       "continent": "Australien",
       "lon": 115.857,
@@ -151,12 +151,12 @@
       "sections": {}
     },
     {
-      "id": "algarve",
-      "name": "Algarve",
-      "shortName": "Algarve",
+      "id": "faro",
+      "name": "Faro / Portugal",
+      "shortName": "Faro",
       "continent": "Europa",
-      "lon": -8.2,
-      "lat": 37.1,
+      "lon": -7.93,
+      "lat": 37.019,
       "date": "2026-11-19",
       "status": "upcoming",
       "stats": {
@@ -170,7 +170,7 @@
     },
     {
       "id": "cartagena",
-      "name": "Cartagena",
+      "name": "Cartagena / Kolumbien",
       "shortName": "Cartagena",
       "continent": "Südamerika",
       "lon": -75.479,
@@ -188,7 +188,7 @@
     },
     {
       "id": "miami",
-      "name": "Miami",
+      "name": "Miami / USA",
       "shortName": "Miami",
       "continent": "Nordamerika",
       "lon": -80.194,
