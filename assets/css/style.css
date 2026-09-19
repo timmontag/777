@@ -13,7 +13,7 @@
   --ampel-yellow: #d99700;
   --ampel-red: #d33a2c;
 
-  --map-upcoming: #7e90c0;
+  --map-upcoming: var(--accent);
   --map-active: var(--ampel-yellow);
   --map-done: var(--ampel-green);
   --map-extra: #6e7fae;
@@ -224,7 +224,7 @@ main {
 
 #progress-container {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   border-radius: 14px;
   padding: 0.9rem;
   box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
@@ -246,8 +246,8 @@ main {
   font-weight: 700;
   text-decoration: none;
   background: var(--bg-elevated);
-  color: var(--text-muted);
-  border: 1px solid var(--border);
+  color: var(--accent);
+  border: 1px solid var(--accent);
 }
 
 .progress-segment--done {
@@ -280,7 +280,7 @@ main {
 
 #map-container {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   border-radius: 14px;
   padding: 0.9rem 0.8rem 1rem;
   box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
@@ -325,7 +325,7 @@ main {
   stroke: var(--accent);
   stroke-width: 1.6;
   stroke-dasharray: 5 4;
-  opacity: 0.5;
+  opacity: 0.65;
 }
 
 .map-route-done {
@@ -446,7 +446,7 @@ main {
 /* Diary */
 .diary-entry {
   background: var(--card);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   border-radius: 14px;
   padding: 1.1rem 1.1rem 1.3rem;
   margin-bottom: 1rem;
@@ -466,10 +466,7 @@ main {
   letter-spacing: 0.02em;
 }
 
-.stage-upcoming {
-  opacity: 0.65;
-}
-
+/* Der Rahmen trägt den Etappenstatus: blau kommt noch, gelb läuft, grün geschafft. */
 .stage-active {
   border-color: var(--ampel-yellow);
 }
@@ -551,10 +548,6 @@ details.rubric[open] .rubric-chevron {
 .rubric--empty,
 .rubric--flat {
   padding: 0.6rem 0.75rem;
-}
-
-.rubric--empty {
-  opacity: 0.65;
 }
 
 .rubric--empty .rubric-summary {
@@ -667,7 +660,7 @@ details.rubric[open] .rubric-chevron {
 /* Spendenblock */
 #donation-section {
   background: var(--bg-elevated);
-  border: 1px solid var(--border);
+  border: 1px solid var(--accent);
   border-radius: 14px;
   padding: 1.2rem;
   text-align: center;
