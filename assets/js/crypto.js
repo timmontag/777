@@ -30,25 +30,65 @@ export async function deriveKey(password, meta) {
     { name: 'PBKDF2', salt, iterations: meta.iterations, hash: meta.hash || 'SHA-256' },
     baseKey,
     { name: 'AES-GCM', length: meta.keyLength || 256 },
-    true, // extractable, damit wir den Schlüssel für die Dauer des Tabs zwischenspeichern können
+    true, // extractable, damit wir den Schlüssel im Browser hinterlegen können
     ['decrypt']
   );
 }
 
-// Speichert den abgeleiteten Schlüssel (nicht das Passwort!) nur für die Dauer
-// des Browser-Tabs, damit man beim Reload nicht erneut tippen muss.
+// Wer das Passwort einmal eingegeben hat, bleibt sieben Tage angemeldet.
+// Hinterlegt wird nur der abgeleitete Schlüssel, nie das Passwort – und
+// ausschließlich im Browser des Besuchers.
+const KEY_STORAGE = 'gwr-key';
+const KEY_TTL_MS = 7 * 24 * 60 * 60 * 1000;
+
 export async function cacheKey(key) {
-  const raw = await crypto.subtle.exportKey('raw', key);
-  sessionStorage.setItem('gwr-key', btoa(String.fromCharCode(...new Uint8Array(raw))));
+  try {
+    const raw = await crypto.subtle.exportKey('raw', key);
+    localStorage.setItem(
+      KEY_STORAGE,
+      JSON.stringify({
+        key: btoa(String.fromCharCode(...new Uint8Array(raw))),
+        expires: Date.now() + KEY_TTL_MS,
+      })
+    );
+  } catch {
+    // z.B. privater Modus ohne Speicher – dann eben jedes Mal eingeben
+  }
+}
+
+function forgetKey() {
+  try {
+    localStorage.removeItem(KEY_STORAGE);
+  } catch {
+    /* nichts zu tun */
+  }
+}
+
+// Verlängert die sieben Tage bei jedem Besuch, damit Stammleser
+// während des Rennens nie wieder tippen müssen.
+function touchCachedKey() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(KEY_STORAGE));
+    if (stored?.key) {
+      localStorage.setItem(KEY_STORAGE, JSON.stringify({ ...stored, expires: Date.now() + KEY_TTL_MS }));
+    }
+  } catch {
+    /* nichts zu tun */
+  }
 }
 
 export async function loadCachedKey() {
-  const stored = sessionStorage.getItem('gwr-key');
-  if (!stored) return null;
   try {
-    const raw = b64ToBytes(stored);
-    return crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, false, ['decrypt']);
+    const stored = JSON.parse(localStorage.getItem(KEY_STORAGE));
+    if (!stored?.key || !stored?.expires || Date.now() > stored.expires) {
+      forgetKey();
+      return null;
+    }
+    return await crypto.subtle.importKey('raw', b64ToBytes(stored.key), { name: 'AES-GCM' }, false, [
+      'decrypt',
+    ]);
   } catch {
+    forgetKey();
     return null;
   }
 }
@@ -92,9 +132,11 @@ export async function tryUnlockWithCachedKey() {
   if (!key) return null;
   try {
     const content = await fetchAndDecrypt(key);
+    touchCachedKey();
     return { key, content };
   } catch {
-    sessionStorage.removeItem('gwr-key');
+    // Passwort geändert oder Schlüssel unbrauchbar – dann wieder fragen
+    forgetKey();
     return null;
   }
 }

@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=5';
-import { renderMap } from './map.js?v=5';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=6';
+import { renderMap } from './map.js?v=6';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -77,7 +77,32 @@ const RUBRICS = [
   ['sport', 'Sport & Körpergefühl'],
   ['reise', 'Reise & Logistik'],
   ['menschen', 'Menschen & Begegnungen'],
+  ['fotos', 'Fotos'],
 ];
+
+const MARATHON_KM = 42.195;
+
+function km(value) {
+  return value.toFixed(1).replace('.', ',');
+}
+
+function renderProgress(stages) {
+  const done = stages.filter((s) => s.status === 'done').length;
+  const segments = stages
+    .map(
+      (s, i) => `
+      <a class="progress-segment progress-segment--${s.status}" href="#entry-${esc(s.id)}"
+         title="Etappe ${i + 1}: ${esc(s.name)}"><span>${i + 1}</span></a>`
+    )
+    .join('');
+  return `
+    <div class="progress-track">${segments}</div>
+    <p class="progress-meta">
+      <strong>${done} von ${stages.length}</strong> Etappen
+      <span aria-hidden="true">·</span>
+      <strong>${km(done * MARATHON_KM)} von ${km(stages.length * MARATHON_KM)} km</strong>
+    </p>`;
+}
 
 function hasStats(stats) {
   return Boolean(stats) && Object.values(stats).some((value) => value);
@@ -93,8 +118,10 @@ function rubricHead(label, status, expandable) {
 
 function rubric([key, label], section, stats) {
   const showStats = key === 'sport' && hasStats(stats);
-  const hasBody = Boolean(section?.paragraphs?.length || section?.photos?.length || showStats);
-  const summary = section?.summary;
+  const photoCount = section?.photos?.length || 0;
+  const hasBody = Boolean(section?.paragraphs?.length || photoCount || showStats);
+  const summary =
+    section?.summary || (key === 'fotos' && photoCount ? `${photoCount} ${photoCount === 1 ? 'Foto' : 'Fotos'}` : null);
 
   if (!hasBody && !summary) {
     return `
@@ -158,6 +185,8 @@ function renderStatusbar(status) {
 
 function renderContent(data) {
   renderStatusbar(data.status);
+
+  document.getElementById('progress-container').innerHTML = renderProgress(data.stages);
 
   document.getElementById('map-container').innerHTML = renderMap(
     data.stages,

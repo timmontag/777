@@ -51,13 +51,23 @@ Jeder Tag (`prerace` sowie jede Etappe in `stages`) hat drei Rubriken unter
 | `sport` | Sport & Körpergefühl — `summary` als Kurzzusammenfassung, optionaler `status` (`green`/`yellow`/`red`) als Ampelpunkt, die Garmin-Kennzahlen aus `stats` und der ausklappbare Text |
 | `reise` | Reise & Logistik — Kurzüberschrift plus ausklappbarer Text |
 | `menschen` | Menschen & Begegnungen — Kurzüberschrift plus ausklappbarer Text |
+| `fotos` | Fotostrecke des Tages — ohne `summary` erscheint automatisch die Anzahl der Fotos |
 
 Jede Rubrik kennt `summary` (immer sichtbar), `paragraphs` (ausklappbar) und
 `photos`. Rubriken ohne Inhalt erscheinen ausgegraut mit „folgt". `prerace` ist
 der Auftakt-Abschnitt in Kapstadt vor der ersten Etappe.
 
+Über der Karte steht der Fortschrittsbalken: sieben Segmente, eingefärbt nach
+`status` der Etappe (`upcoming`/`active`/`done`), dazu gelaufene Etappen und
+Kilometer (Etappen mit `status: "done"` × 42,195 km). Ein Klick auf ein Segment
+springt zur jeweiligen Etappe.
+
 ## Sicherheit
 
 - `robots.txt` (Disallow: /) + `<meta name="robots" content="noindex,...">`
 - Keine Bankdaten auf der Seite — Spendenlink zeigt ausschließlich auf gemischtetuete.org/spenden
-- Der abgeleitete Schlüssel wird nur in `sessionStorage` des Tabs zwischengespeichert, nie das Passwort selbst
+- Wer das Passwort einmal eingegeben hat, bleibt auf diesem Gerät sieben Tage
+  angemeldet: im `localStorage` liegt dafür der abgeleitete Schlüssel (nie das
+  Passwort), die Frist verlängert sich bei jedem Besuch. Nach Ablauf oder bei
+  einem Passwortwechsel wird wieder gefragt; ein anderes Gerät muss das Passwort
+  immer erst eingeben.

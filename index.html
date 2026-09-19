@@ -8,7 +8,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
   <meta name="theme-color" content="#ffffff" />
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
-  <link rel="stylesheet" href="assets/css/style.css?v=5" />
+  <link rel="stylesheet" href="assets/css/style.css?v=6" />
 </head>
 <body>
   <header id="statusbar" aria-live="polite"></header>
@@ -17,6 +17,7 @@
     <div class="gate-box">
       <h1>Great World Race 2026</h1>
       <p>Dieses Tagebuch ist passwortgeschützt und wird direkt in deinem Browser entschlüsselt. Niemand außer dir sieht die Inhalte unverschlüsselt.</p>
+      <p class="gate-hint">Einmal eingegeben, bleibt der Zugang auf diesem Gerät sieben Tage bestehen.</p>
       <form id="password-form">
         <label for="password-input" class="visually-hidden">Passwort</label>
         <input id="password-input" type="password" autocomplete="current-password" placeholder="Passwort" required />
@@ -27,6 +28,11 @@
   </section>
 
   <main id="content" hidden>
+    <section id="progress-section">
+      <h2 class="section-heading">Fortschritt</h2>
+      <div id="progress-container"></div>
+    </section>
+
     <section id="map-section">
       <h2 class="section-heading">Route</h2>
       <div id="map-container"></div>
@@ -59,6 +65,6 @@
     </footer>
   </main>
 
-  <script type="module" src="assets/js/app.js?v=5"></script>
+  <script type="module" src="assets/js/app.js?v=6"></script>
 </body>
 </html>
