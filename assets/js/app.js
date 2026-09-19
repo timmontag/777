@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=6';
-import { renderMap } from './map.js?v=6';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=7';
+import { renderMap } from './map.js?v=7';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -164,7 +164,7 @@ function dayCard({ id, heading, meta, day }, extraClass = '') {
     </section>`;
 }
 
-function renderStatusbar(status) {
+function renderStatusbar(status, stages) {
   const bar = document.getElementById('statusbar');
   const dayLabel =
     status.phase === 'race'
@@ -172,6 +172,10 @@ function renderStatusbar(status) {
       : status.phase === 'prolog'
       ? 'Prolog'
       : 'Epilog';
+  // Geschaffte Etappen färben die Leiste über die Woche grün ein.
+  const rail = stages
+    .map((s) => `<span class="rail-segment rail-segment--${s.status}"></span>`)
+    .join('');
   bar.innerHTML = `
     <div class="statusbar-inner">
       <span class="statusbar-day">${dayLabel}</span>
@@ -180,11 +184,12 @@ function renderStatusbar(status) {
     status.ampel
   )}"></span>
     </div>
-    ${status.quickStatus ? `<div class="quick-status">${esc(status.quickStatus)}</div>` : ''}`;
+    ${status.quickStatus ? `<div class="quick-status">${esc(status.quickStatus)}</div>` : ''}
+    <div class="statusbar-rail" aria-hidden="true">${rail}</div>`;
 }
 
 function renderContent(data) {
-  renderStatusbar(data.status);
+  renderStatusbar(data.status, data.stages);
 
   document.getElementById('progress-container').innerHTML = renderProgress(data.stages);
 

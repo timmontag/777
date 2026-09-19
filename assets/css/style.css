@@ -1,26 +1,26 @@
 :root {
   --bg: #ffffff;
-  --bg-elevated: #f4f5fa;
+  --bg-elevated: #f2f5fb;
   --card: #ffffff;
-  --text: #14182c;
-  --text-muted: #656c85;
-  --border: #e2e5f0;
-  --accent: #1c2b6b;
-  --accent-strong: #121d4d;
+  --text: #0e1729;
+  --text-muted: #5b6577;
+  --border: #dbe3f0;
+  --accent: #0b3fb5;
+  --accent-strong: #082f8c;
   --accent-contrast: #ffffff;
 
-  --ampel-green: #2f9e5c;
-  --ampel-yellow: #d99a00;
-  --ampel-red: #d13b3b;
+  --ampel-green: #0a8459;
+  --ampel-yellow: #d99700;
+  --ampel-red: #d33a2c;
 
-  --map-upcoming: #7b86b5;
+  --map-upcoming: #7e90c0;
   --map-active: var(--ampel-yellow);
   --map-done: var(--ampel-green);
-  --map-extra: #6f7aa8;
-  --map-ocean: #edf2fc;
-  --map-land: #c1cbe6;
-  --map-land-stroke: #a4b0d6;
-  --map-outline: #ccd5ed;
+  --map-extra: #6e7fae;
+  --map-ocean: #e8f0fd;
+  --map-land: #bacbeb;
+  --map-land-stroke: #9db3e0;
+  --map-outline: #c6d6f2;
 
   color-scheme: light;
 }
@@ -96,7 +96,7 @@ a {
   height: 14px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 0 2px rgba(20, 24, 44, 0.1);
+  box-shadow: 0 0 0 2px rgba(14, 23, 41, 0.1);
 }
 
 .ampel-green {
@@ -113,6 +113,27 @@ a {
   margin-top: 0.35rem;
   font-size: 0.85rem;
   color: var(--text-muted);
+}
+
+/* Fortschrittsschiene am unteren Rand der Statusleiste */
+.statusbar-rail {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  margin: 0.55rem -1rem -0.6rem;
+}
+
+.rail-segment {
+  height: 4px;
+  background: var(--border);
+}
+
+.rail-segment--done {
+  background: var(--ampel-green);
+}
+
+.rail-segment--active {
+  background: var(--ampel-yellow);
 }
 
 /* Passwort-Gate */
@@ -206,7 +227,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 0.9rem;
-  box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
+  box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
 }
 
 .progress-track {
@@ -262,7 +283,7 @@ main {
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 0.9rem 0.8rem 1rem;
-  box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
+  box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
 }
 
 .map-wrap {
@@ -429,7 +450,7 @@ main {
   border-radius: 14px;
   padding: 1.1rem 1.1rem 1.3rem;
   margin-bottom: 1rem;
-  box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
+  box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
   scroll-margin-top: 4.5rem; /* Sprungziel nicht unter der Statusleiste parken */
 }
 
@@ -651,7 +672,7 @@ details.rubric[open] .rubric-chevron {
   padding: 1.2rem;
   text-align: center;
   margin-top: 1.5rem;
-  box-shadow: 0 1px 3px rgba(20, 24, 44, 0.06);
+  box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
 }
 
 #donation-section h2 {
