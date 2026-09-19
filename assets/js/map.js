@@ -3,7 +3,7 @@
 // (Build-Skript tools/build-worldmap.mjs), die Städte werden zur Laufzeit mit
 // derselben Projektion umgerechnet.
 
-import { WORLD } from './world-geo.js?v=5';
+import { WORLD } from './world-geo.js?v=6';
 
 // Natural Earth 1, identisch zur Formel in d3-geo – sonst lägen die Städte
 // nicht deckungsgleich auf den Kontinenten.

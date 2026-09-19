@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise und menschen: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport.",
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise, menschen und fotos: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport.",
   "status": {
     "phase": "race",
     "day": 3,
@@ -120,6 +120,15 @@
             "Beispiel für den ausklappbaren Text über Begegnungen."
           ],
           "photos": []
+        },
+        "fotos": {
+          "summary": "Optional – ohne summary erscheint automatisch die Anzahl der Fotos",
+          "photos": [
+            {
+              "file": "perth-2.webp",
+              "alt": "Beispiel-Alt-Text für das zweite Foto"
+            }
+          ]
         }
       }
     },
