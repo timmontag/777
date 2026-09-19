@@ -40,11 +40,15 @@ async function deriveKey(password, meta) {
 function collectPhotoRefs(content) {
   const refs = [];
   const collect = (photos) => (photos || []).forEach((p) => refs.push(p));
-  collect(content.prolog?.photos);
-  collect(content.epilog?.photos);
-  for (const stage of content.stages || []) {
-    (stage.diary || []).forEach((entry) => collect(entry.photos));
-  }
+  const collectNode = (node) => {
+    if (!node) return;
+    collect(node.photos);
+    Object.values(node.sections || {}).forEach((section) => collect(section?.photos));
+  };
+  collectNode(content.prolog);
+  collectNode(content.prerace);
+  collectNode(content.epilog);
+  (content.stages || []).forEach(collectNode);
   return refs;
 }
 

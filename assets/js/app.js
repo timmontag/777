@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=4';
-import { renderMap } from './map.js?v=4';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=5';
+import { renderMap } from './map.js?v=5';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -55,12 +55,10 @@ function photoGallery(photos, keyRef) {
   return `<div class="photo-gallery">${figures}</div>`;
 }
 
-function diarySection({ id, heading, meta, paragraphs: paras, photos, stats }, extraClass = '') {
+function diarySection({ id, heading, paragraphs: paras, photos }, extraClass = '') {
   return `
     <section class="diary-entry ${extraClass}" id="${id ? `entry-${id}` : ''}">
       <h3>${esc(heading)}</h3>
-      ${meta ? `<p class="entry-meta">${esc(meta)}</p>` : ''}
-      ${stats ? statCard(stats) : ''}
       <div class="diary-text">${paragraphs(paras)}</div>
       ${photoGallery(photos)}
     </section>`;
@@ -73,6 +71,70 @@ function stageMeta(stage) {
 
 function ampelLabel(ampel) {
   return { green: 'Alles im Plan', yellow: 'Achtung', red: 'Problem' }[ampel] || 'Status unbekannt';
+}
+
+const RUBRICS = [
+  ['sport', 'Sport & Körpergefühl'],
+  ['reise', 'Reise & Logistik'],
+  ['menschen', 'Menschen & Begegnungen'],
+];
+
+function hasStats(stats) {
+  return Boolean(stats) && Object.values(stats).some((value) => value);
+}
+
+function rubricHead(label, status, expandable) {
+  const dot = status
+    ? `<span class="ampel ampel-${esc(status)} rubric-status" title="${ampelLabel(status)}"></span>`
+    : '';
+  const chevron = expandable ? '<span class="rubric-chevron" aria-hidden="true"></span>' : '';
+  return `<span class="rubric-head"><span class="rubric-label">${esc(label)}</span>${dot}${chevron}</span>`;
+}
+
+function rubric([key, label], section, stats) {
+  const showStats = key === 'sport' && hasStats(stats);
+  const hasBody = Boolean(section?.paragraphs?.length || section?.photos?.length || showStats);
+  const summary = section?.summary;
+
+  if (!hasBody && !summary) {
+    return `
+      <div class="rubric rubric--empty">
+        ${rubricHead(label, null, false)}
+        <span class="rubric-summary">folgt</span>
+      </div>`;
+  }
+
+  if (!hasBody) {
+    return `
+      <div class="rubric rubric--flat">
+        ${rubricHead(label, section.status, false)}
+        <span class="rubric-summary">${esc(summary)}</span>
+      </div>`;
+  }
+
+  return `
+    <details class="rubric">
+      <summary>
+        ${rubricHead(label, section?.status, true)}
+        ${summary ? `<span class="rubric-summary">${esc(summary)}</span>` : ''}
+      </summary>
+      <div class="rubric-body">
+        ${showStats ? statCard(stats) : ''}
+        <div class="diary-text">${paragraphs(section?.paragraphs)}</div>
+        ${photoGallery(section?.photos)}
+      </div>
+    </details>`;
+}
+
+function dayCard({ id, heading, meta, day }, extraClass = '') {
+  const sections = day.sections || {};
+  const rubrics = RUBRICS.map((entry) => rubric(entry, sections[entry[0]], day.stats)).join('');
+  return `
+    <section class="diary-entry ${extraClass}" id="entry-${id}">
+      <h3>${esc(heading)}</h3>
+      ${meta ? `<p class="entry-meta">${esc(meta)}</p>` : ''}
+      <div class="rubrics">${rubrics}</div>
+    </section>`;
 }
 
 function renderStatusbar(status) {
@@ -107,37 +169,28 @@ function renderContent(data) {
     'diary-entry-prolog'
   );
 
-  document.getElementById('stages-container').innerHTML = data.stages
-    .map((s) =>
-      s.diary && s.diary.length
-        ? s.diary
-            .map((entry, i) =>
-              diarySection(
-                {
-                  id: `${s.id}-${i}`,
-                  heading: `Etappe ${data.stages.indexOf(s) + 1} · ${s.name}${entry.heading ? ` — ${entry.heading}` : ''}`,
-                  meta: i === 0 ? stageMeta(s) : null,
-                  paragraphs: entry.paragraphs,
-                  photos: entry.photos,
-                  stats: i === 0 ? s.stats : null,
-                },
-                `stage-${s.status}`
-              )
-            )
-            .join('')
-        : diarySection(
-            {
-              id: s.id,
-              heading: `Etappe ${data.stages.indexOf(s) + 1} · ${s.name}`,
-              meta: stageMeta(s),
-              paragraphs: [s.placeholder || 'Hier erscheint der Tagebucheintrag, sobald diese Etappe läuft.'],
-              photos: [],
-              stats: s.stats,
-            },
-            `stage-${s.status}`
-          )
+  const preraceCard = data.prerace
+    ? dayCard(
+        {
+          id: 'prerace',
+          heading: data.prerace.heading,
+          meta: data.prerace.meta,
+          day: data.prerace,
+        },
+        `stage-${data.prerace.status || 'upcoming'}`
+      )
+    : '';
+
+  const stageCards = data.stages
+    .map((s, i) =>
+      dayCard(
+        { id: s.id, heading: `Etappe ${i + 1} · ${s.name}`, meta: stageMeta(s), day: s },
+        `stage-${s.status}`
+      )
     )
     .join('');
+
+  document.getElementById('stages-container').innerHTML = preraceCard + stageCards;
 
   document.getElementById('epilog-container').innerHTML = diarySection(
     { id: 'epilog', heading: data.epilog.heading, paragraphs: data.epilog.paragraphs, photos: data.epilog.photos },
