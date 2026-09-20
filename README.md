@@ -57,6 +57,18 @@ Jede Rubrik kennt `summary` (immer sichtbar), `paragraphs` (ausklappbar) und
 `photos`. Rubriken ohne Inhalt erscheinen ausgegraut mit „folgt". `prerace` ist
 der Auftakt-Abschnitt in Kapstadt vor der ersten Etappe.
 
+Die Überschrift einer Etappe zeigt Datum, Kontinent, Startzeit und Temperatur:
+
+- `timezone` (IANA, z. B. `Australia/Perth`) und `startLocal` (`"05:30"`)
+  ergeben zusammen die Uhrzeit in deutscher Zeit. MEZ oder MESZ ergibt sich
+  aus dem Datum, ebenso ein abweichendes deutsches Datum
+  (Perth 05:30 Ortszeit = 22:30 MEZ am Vortag).
+- `weather.temp` ist die Temperatur vor Ort in Grad Celsius, als Zahl.
+  Sie wird beim Veröffentlichen von Hand eingetragen — aus dem
+  Garmin-Screenshot oder der Sprachnotiz. Bewusst kein Live-Abruf im Browser:
+  die Seite soll mit keinem Dritten sprechen, und der Wert soll die
+  Bedingungen des Renntags festhalten statt später das aktuelle Wetter zu zeigen.
+
 Über der Karte steht der Fortschrittsbalken: sieben Segmente, eingefärbt nach
 `status` der Etappe (`upcoming`/`active`/`done`), dazu gelaufene Etappen und
 Kilometer (Etappen mit `status: "done"` × 42,195 km). Ein Klick auf ein Segment
