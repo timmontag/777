@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=9';
-import { renderMap } from './map.js?v=9';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=10';
+import { renderMap } from './map.js?v=10';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -64,9 +64,63 @@ function diarySection({ id, heading, paragraphs: paras, photos }, extraClass = '
     </section>`;
 }
 
+// Verschiebung einer Zeitzone gegenüber UTC zum gegebenen Zeitpunkt.
+function zoneOffsetMs(date, timeZone) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-US', {
+      timeZone,
+      hour12: false,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+    })
+      .formatToParts(date)
+      .map((p) => [p.type, p.value])
+  );
+  return Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour % 24, parts.minute, parts.second) - date.getTime();
+}
+
+// Wanduhrzeit vor Ort in einen echten Zeitpunkt übersetzen. Der zweite
+// Durchlauf fängt Zeitumstellungen ab.
+function localWallTimeToInstant(dateStr, timeStr, timeZone) {
+  const naive = new Date(`${dateStr}T${timeStr}:00Z`);
+  const firstPass = new Date(naive.getTime() - zoneOffsetMs(naive, timeZone));
+  return new Date(naive.getTime() - zoneOffsetMs(firstPass, timeZone));
+}
+
+// "Start 05:30 Ortszeit (22:30 MEZ am 16.11.)" – ob MEZ oder MESZ dort steht,
+// ergibt sich aus dem Datum, das muss niemand von Hand pflegen.
+function startTimeLabel(stage) {
+  if (!stage.startLocal || !stage.timezone || !stage.date) return null;
+  const instant = localWallTimeToInstant(stage.date, stage.startLocal, stage.timezone);
+  const p = Object.fromEntries(
+    new Intl.DateTimeFormat('de-DE', {
+      timeZone: 'Europe/Berlin',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZoneName: 'short',
+      day: '2-digit',
+      month: '2-digit',
+    })
+      .formatToParts(instant)
+      .map((x) => [x.type, x.value])
+  );
+  const sameDay = `${p.day}.${p.month}.` === `${stage.date.slice(8, 10)}.${stage.date.slice(5, 7)}.`;
+  const german = `${p.hour}:${p.minute} ${p.timeZoneName}${sameDay ? '' : ` am ${p.day}.${p.month}.`}`;
+  return `Start ${stage.startLocal} Ortszeit (${german})`;
+}
+
+function tempLabel(stage) {
+  const temp = stage.weather?.temp;
+  return typeof temp === 'number' ? `${String(temp).replace('-', '−')} °C vor Ort` : null;
+}
+
 function stageMeta(stage) {
   const date = stage.date ? stage.date.split('-').reverse().join('.') : '';
-  return [date, stage.continent].filter(Boolean).join(' · ');
+  return [date, stage.continent, startTimeLabel(stage), tempLabel(stage)].filter(Boolean).join(' · ');
 }
 
 function ampelLabel(ampel) {
