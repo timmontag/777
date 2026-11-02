@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=10';
-import { renderMap } from './map.js?v=10';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=11';
+import { renderMap } from './map.js?v=11';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -127,6 +127,95 @@ function ampelLabel(ampel) {
   return { green: 'Alles im Plan', yellow: 'Achtung', red: 'Problem' }[ampel] || 'Status unbekannt';
 }
 
+// Reiseplan: Flüge und Rennen als durchgehende Kette
+const PLANE_ICON =
+  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V18l-2 1.5V21l3.5-1 3.5 1v-1.5L13 18v-4.5L21 16z" /></svg>';
+const WEEKDAYS = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
+
+function fmtDuration(minutes) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m ? `${h} h ${String(m).padStart(2, '0')} min` : `${h} h`;
+}
+
+function fmtDay(dateStr) {
+  const weekday = WEEKDAYS[new Date(`${dateStr}T12:00:00Z`).getUTCDay()];
+  return `${weekday} ${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.`;
+}
+
+function legMinutes(leg) {
+  return Math.round((new Date(leg.arr.utc) - new Date(leg.dep.utc)) / 60000);
+}
+
+function travelRow(kind, marker, title, sub, extraClass = '') {
+  return `
+    <li class="travel-row travel-row--${kind} ${extraClass}">
+      <span class="travel-marker travel-marker--${kind}">${marker}</span>
+      <span class="travel-body">
+        <span class="travel-title">${title}</span>
+        ${sub ? `<span class="travel-sub">${sub}</span>` : ''}
+      </span>
+    </li>`;
+}
+
+function renderTravel(travel, stages) {
+  if (!travel?.legs?.length) return '';
+  const legs = travel.legs;
+  const flightMinutes = legs.reduce((sum, l) => sum + legMinutes(l), 0);
+
+  const rows = [];
+  if (travel.start?.place) {
+    rows.push(travelRow('start', '', esc(travel.start.place), esc(travel.start.note || '')));
+  }
+
+  let stopMinutes = 0;
+  let stopPlace = '';
+  stages.forEach((stage, i) => {
+    const inbound = legs.filter((l) => l.toStage === stage.id);
+    inbound.forEach((leg, idx) => {
+      const sameDay = leg.dep.date === leg.arr.date;
+      const times = sameDay
+        ? `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${esc(leg.arr.local)} Uhr Ortszeit`
+        : `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${fmtDay(leg.arr.date)}, ${esc(leg.arr.local)} Uhr Ortszeit`;
+      rows.push(
+        travelRow(
+          'leg',
+          PLANE_ICON,
+          `${fmtDuration(legMinutes(leg))} <span class="travel-route">${esc(leg.from)} → ${esc(leg.to)}</span>`,
+          times
+        )
+      );
+      const next = inbound[idx + 1];
+      if (next) {
+        // Bodenzeit zwischen zwei Teilstrecken, z.B. der Tankstopp in Kairo
+        const ground = Math.round((new Date(next.dep.utc) - new Date(leg.arr.utc)) / 60000);
+        stopMinutes += ground;
+        stopPlace = leg.to;
+        rows.push(travelRow('stop', '', `${fmtDuration(ground)} ${esc(leg.note || 'Zwischenstopp')} in ${esc(leg.to)}`, ''));
+      }
+    });
+    rows.push(
+      travelRow(
+        'race',
+        String(i + 1),
+        esc(stage.name),
+        startTimeLabel(stage)?.replace('Start', 'Marathon') || '',
+        `travel-row--${stage.status}`
+      )
+    );
+  });
+
+  const stat = [
+    `<strong>${legs.length} Flüge</strong>`,
+    `<strong>${fmtDuration(flightMinutes)}</strong> in der Luft`,
+    stopMinutes ? `${fmtDuration(stopMinutes)} Tankstopp in ${esc(stopPlace)}` : '',
+  ].filter(Boolean);
+
+  return `
+    <p class="travel-stat">${stat.join(' <span aria-hidden="true">·</span> ')}</p>
+    <ol class="travel-timeline">${rows.join('')}</ol>`;
+}
+
 const RUBRICS = [
   ['sport', 'Sport & Körpergefühl'],
   ['reise', 'Reise & Logistik'],
@@ -251,6 +340,8 @@ function renderContent(data) {
     data.stages,
     data.prolog?.km0 ? [{ ...data.prolog.km0, label: data.prolog.km0.label.split(' (')[0] }] : []
   );
+
+  document.getElementById('travel-container').innerHTML = renderTravel(data.travel, data.stages);
 
   document.getElementById('prolog-container').innerHTML = diarySection(
     { id: 'prolog', heading: data.prolog.heading, paragraphs: data.prolog.paragraphs, photos: data.prolog.photos },
