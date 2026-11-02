@@ -74,6 +74,14 @@ Die Überschrift einer Etappe zeigt Datum, Kontinent, Startzeit und Temperatur:
 Kilometer (Etappen mit `status: "done"` × 42,195 km). Ein Klick auf ein Segment
 springt zur jeweiligen Etappe.
 
+## Reiseplan
+
+`travel.legs` beschreibt die Flüge. `toStage` ordnet einen Flug der Etappe zu,
+zu der er führt; daraus entsteht die Kette aus Flügen und Rennen unter der
+Karte. Die Flugdauer wird aus den `utc`-Zeiten berechnet, nicht von Hand
+gepflegt — ebenso die Bodenzeit, wenn zwei Flüge zur selben Etappe führen
+(der Tankstopp in Kairo). Die `local`-Zeiten dienen nur der Anzeige.
+
 ## Sicherheit
 
 - `robots.txt` (Disallow: /) + `<meta name="robots" content="noindex,...">`

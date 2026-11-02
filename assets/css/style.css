@@ -273,6 +273,155 @@ main {
   color: var(--text);
 }
 
+/* Reiseplan: Flüge und Rennen als durchgehende Kette */
+#travel-section {
+  margin-top: 1rem;
+}
+
+#travel-container {
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 14px;
+  padding: 1rem 1rem 0.6rem;
+  box-shadow: 0 1px 3px rgba(14, 23, 41, 0.06);
+}
+
+.travel-stat {
+  margin: 0 0 0.9rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.travel-stat strong {
+  color: var(--accent);
+  font-size: 0.9rem;
+}
+
+.travel-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.travel-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 0.65rem;
+  align-items: center;
+  padding: 0.3rem 0;
+}
+
+/* durchgehende Linie hinter den Markern */
+.travel-row::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border);
+}
+
+.travel-row:first-child::before {
+  top: 50%;
+}
+
+.travel-row:last-child::before {
+  bottom: 50%;
+}
+
+.travel-marker {
+  position: relative;
+  z-index: 1;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 2px solid var(--border);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent-contrast);
+}
+
+.travel-marker--race {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.travel-row--done .travel-marker--race {
+  background: var(--ampel-green);
+  border-color: var(--ampel-green);
+}
+
+.travel-row--active .travel-marker--race {
+  background: var(--ampel-yellow);
+  border-color: var(--ampel-yellow);
+  color: #3a2c00;
+}
+
+.travel-marker--leg {
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  border: none;
+  background: var(--bg-elevated);
+}
+
+.travel-marker--leg svg {
+  width: 12px;
+  height: 12px;
+  fill: var(--accent);
+}
+
+.travel-marker--start,
+.travel-marker--stop {
+  width: 10px;
+  height: 10px;
+  margin-left: 8px;
+  background: var(--map-extra);
+  border: none;
+}
+
+.travel-body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.travel-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.travel-route {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.travel-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.travel-row--race .travel-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.travel-row--stop .travel-title,
+.travel-row--stop .travel-sub {
+  font-size: 0.72rem;
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
 /* Karte: Atlas-Weltkarte mit Etappenstädten */
 #map-section {
   margin-top: 1rem;

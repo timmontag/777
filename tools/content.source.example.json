@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise, menschen und fotos: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport. timezone (IANA) plus startLocal (HH:MM Ortszeit) erzeugen in der Überschrift automatisch die Uhrzeit in deutscher Zeit, inklusive korrektem MEZ/MESZ. weather.temp ist die Temperatur vor Ort in Grad Celsius.",
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise, menschen und fotos: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport. timezone (IANA) plus startLocal (HH:MM Ortszeit) erzeugen in der Überschrift automatisch die Uhrzeit in deutscher Zeit, inklusive korrektem MEZ/MESZ. weather.temp ist die Temperatur vor Ort in Grad Celsius. travel.legs zeichnet den Reiseplan: toStage ordnet den Flug der Etappe zu, zu der er führt. Die Flugdauer wird aus den utc-Zeiten berechnet, ebenso die Bodenzeit zwischen zwei Flügen zur selben Etappe (Tankstopp).",
   "status": {
     "phase": "race",
     "day": 3,
@@ -246,5 +246,44 @@
       "labelPos": "top",
       "sections": {}
     }
-  ]
+  ],
+  "travel": {
+    "start": {
+      "place": "Kapstadt",
+      "note": "Basis vor dem Rennen"
+    },
+    "legs": [
+      {
+        "from": "Kapstadt",
+        "to": "Wolf’s Fang",
+        "toStage": "antarktis",
+        "dep": {
+          "date": "2026-11-15",
+          "local": "06:00",
+          "utc": "2026-11-15T04:00Z"
+        },
+        "arr": {
+          "date": "2026-11-15",
+          "local": "11:30",
+          "utc": "2026-11-15T09:30Z"
+        }
+      },
+      {
+        "from": "Singapur",
+        "to": "Kairo",
+        "toStage": "faro",
+        "dep": {
+          "date": "2026-11-18",
+          "local": "19:20",
+          "utc": "2026-11-18T11:20Z"
+        },
+        "arr": {
+          "date": "2026-11-19",
+          "local": "01:15",
+          "utc": "2026-11-18T23:15Z"
+        },
+        "note": "Tankstopp"
+      }
+    ]
+  }
 }
