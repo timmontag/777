@@ -3,7 +3,7 @@
 // (Build-Skript tools/build-worldmap.mjs), die Städte werden zur Laufzeit mit
 // derselben Projektion umgerechnet.
 
-import { WORLD } from './world-geo.js?v=11';
+import { WORLD } from './world-geo.js?v=12';
 
 // Natural Earth 1, identisch zur Formel in d3-geo – sonst lägen die Städte
 // nicht deckungsgleich auf den Kontinenten.
@@ -49,7 +49,7 @@ function routePaths(stages, points) {
   return { done: done.join(' '), todo: todo.join(' ') };
 }
 
-export function renderMap(stages, extras = []) {
+export function renderMap(stages) {
   const points = stages.map((s) => project(s.lon, s.lat));
   const { done, todo } = routePaths(stages, points);
 
@@ -65,13 +65,6 @@ export function renderMap(stages, extras = []) {
     })
     .join('');
 
-  const extraDots = extras
-    .map((e) => {
-      const [x, y] = project(e.lon, e.lat);
-      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="3" class="map-dot-extra" />`;
-    })
-    .join('');
-
   const labels = stages
     .map((s, i) => {
       const [x, y] = points[i];
@@ -79,16 +72,6 @@ export function renderMap(stages, extras = []) {
       return `<span class="pin-label pin-label--${pos}" style="left:${((x / WORLD.width) * 100).toFixed(
         2
       )}%;top:${((y / WORLD.height) * 100).toFixed(2)}%">${i + 1}. ${esc(s.shortName)}</span>`;
-    })
-    .join('');
-
-  const extraLabels = extras
-    .map((e) => {
-      const [x, y] = project(e.lon, e.lat);
-      return `<span class="pin-label pin-label--extra pin-label--${e.labelPos || 'right'}" style="left:${(
-        (x / WORLD.width) *
-        100
-      ).toFixed(2)}%;top:${((y / WORLD.height) * 100).toFixed(2)}%">${esc(e.label)}</span>`;
     })
     .join('');
 
@@ -112,11 +95,9 @@ export function renderMap(stages, extras = []) {
         <path d="${WORLD.landPath}" class="map-land" />
         ${todo ? `<path d="${todo}" class="map-route map-route-todo" />` : ''}
         ${done ? `<path d="${done}" class="map-route map-route-done" />` : ''}
-        ${extraDots}
         ${dots}
       </svg>
       ${labels}
-      ${extraLabels}
     </div>
     <ol class="map-legend">${legend}</ol>
     <p class="map-caption">7 Marathons · 7 Kontinente · 7 Tage</p>`;

@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise, menschen und fotos: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport. timezone (IANA) plus startLocal (HH:MM Ortszeit) erzeugen in der Überschrift automatisch die Uhrzeit in deutscher Zeit, inklusive korrektem MEZ/MESZ. weather.temp ist die Temperatur vor Ort in Grad Celsius. travel.legs zeichnet den Reiseplan: toStage ordnet den Flug der Etappe zu, zu der er führt. Die Flugdauer wird aus den utc-Zeiten berechnet, ebenso die Bodenzeit zwischen zwei Flügen zur selben Etappe (Tankstopp).",
+  "_hinweis": "Schema-Beispiel mit Fantasiewerten – niemals echte Inhalte hier ablegen. Echte Quelle liegt in tools/work/content.source.json (gitignored) und wird nur verschlüsselt committet. status.phase ist before, race oder epilog. lon/lat verorten die Etappe auf der Weltkarte, labelPos (top|bottom|left|right) steuert die Position der Beschriftung. Pro Tag gibt es die Rubriken sport, reise, menschen und fotos: summary ist die immer sichtbare Kurzzusammenfassung, paragraphs der ausklappbare Text, status (green|yellow|red) blendet einen Ampelpunkt ein. Die Garmin-Kennzahlen aus stats erscheinen in der Rubrik sport. timezone (IANA) plus startLocal (HH:MM Ortszeit) erzeugen in der Überschrift automatisch die Uhrzeit in deutscher Zeit, inklusive korrektem MEZ/MESZ. weather.temp ist die Temperatur vor Ort in Grad Celsius. travel.legs zeichnet den Reiseplan: toStage ordnet den Flug der Etappe zu, zu der er führt. Die Flugdauer wird aus den utc-Zeiten berechnet, ebenso die Bodenzeit zwischen zwei Flügen zur selben Etappe (Tankstopp).",
   "status": {
     "phase": "race",
     "day": 3,
@@ -7,25 +7,6 @@
     "stageLabel": "Etappe 3 · Perth / Australien",
     "ampel": "green",
     "quickStatus": "Gelandet in Perth, Marathon morgen früh Ortszeit."
-  },
-  "prolog": {
-    "heading": "Prolog — Vorbereitung",
-    "paragraphs": [
-      "Beispieltext zur Vorbereitung.",
-      "Beispieltext zum Köln-Marathon als Generalprobe am 4.10."
-    ],
-    "photos": [
-      {
-        "file": "prolog-1.webp",
-        "alt": "Beispiel-Alt-Text für ein Vorbereitungsfoto"
-      }
-    ],
-    "km0": {
-      "lon": 6.96,
-      "lat": 50.94,
-      "label": "Köln-Marathon (Generalprobe)",
-      "labelPos": "right"
-    }
   },
   "epilog": {
     "heading": "Epilog",

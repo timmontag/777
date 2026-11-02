@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=11';
-import { renderMap } from './map.js?v=11';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=12';
+import { renderMap } from './map.js?v=12';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -310,11 +310,7 @@ function dayCard({ id, heading, meta, day }, extraClass = '') {
 function renderStatusbar(status, stages) {
   const bar = document.getElementById('statusbar');
   const dayLabel =
-    status.phase === 'race'
-      ? `Tag ${status.day}/${status.totalDays}`
-      : status.phase === 'prolog'
-      ? 'Prolog'
-      : 'Epilog';
+    status.phase === 'race' ? `Tag ${status.day}/${status.totalDays}` : status.phase === 'before' ? 'Vor dem Start' : 'Epilog';
   // Geschaffte Etappen färben die Leiste über die Woche grün ein.
   const rail = stages
     .map((s) => `<span class="rail-segment rail-segment--${s.status}"></span>`)
@@ -336,17 +332,9 @@ function renderContent(data) {
 
   document.getElementById('progress-container').innerHTML = renderProgress(data.stages);
 
-  document.getElementById('map-container').innerHTML = renderMap(
-    data.stages,
-    data.prolog?.km0 ? [{ ...data.prolog.km0, label: data.prolog.km0.label.split(' (')[0] }] : []
-  );
+  document.getElementById('map-container').innerHTML = renderMap(data.stages);
 
   document.getElementById('travel-container').innerHTML = renderTravel(data.travel, data.stages);
-
-  document.getElementById('prolog-container').innerHTML = diarySection(
-    { id: 'prolog', heading: data.prolog.heading, paragraphs: data.prolog.paragraphs, photos: data.prolog.photos },
-    'diary-entry-prolog'
-  );
 
   const preraceCard = data.prerace
     ? dayCard(
