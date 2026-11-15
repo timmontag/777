@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=12';
-import { renderMap } from './map.js?v=12';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=13';
+import { renderMap } from './map.js?v=13';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -143,8 +143,18 @@ function fmtDay(dateStr) {
   return `${weekday} ${dateStr.slice(8, 10)}.${dateStr.slice(5, 7)}.`;
 }
 
+// Ohne bekannte Uhrzeiten (Plan geändert) bleibt die Flugdauer aus dem Schedule stehen.
 function legMinutes(leg) {
-  return Math.round((new Date(leg.arr.utc) - new Date(leg.dep.utc)) / 60000);
+  return leg.dep?.utc && leg.arr?.utc
+    ? Math.round((new Date(leg.arr.utc) - new Date(leg.dep.utc)) / 60000)
+    : leg.minutes;
+}
+
+function legTimes(leg) {
+  if (!leg.dep?.local || !leg.arr?.local) return 'neue Uhrzeiten folgen';
+  return leg.dep.date === leg.arr.date
+    ? `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${esc(leg.arr.local)} Uhr Ortszeit`
+    : `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${fmtDay(leg.arr.date)}, ${esc(leg.arr.local)} Uhr Ortszeit`;
 }
 
 function travelRow(kind, marker, title, sub, extraClass = '') {
@@ -173,25 +183,26 @@ function renderTravel(travel, stages) {
   stages.forEach((stage, i) => {
     const inbound = legs.filter((l) => l.toStage === stage.id);
     inbound.forEach((leg, idx) => {
-      const sameDay = leg.dep.date === leg.arr.date;
-      const times = sameDay
-        ? `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${esc(leg.arr.local)} Uhr Ortszeit`
-        : `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${fmtDay(leg.arr.date)}, ${esc(leg.arr.local)} Uhr Ortszeit`;
       rows.push(
         travelRow(
           'leg',
           PLANE_ICON,
           `${fmtDuration(legMinutes(leg))} <span class="travel-route">${esc(leg.from)} → ${esc(leg.to)}</span>`,
-          times
+          legTimes(leg)
         )
       );
       const next = inbound[idx + 1];
       if (next) {
         // Bodenzeit zwischen zwei Teilstrecken, z.B. der Tankstopp in Kairo
-        const ground = Math.round((new Date(next.dep.utc) - new Date(leg.arr.utc)) / 60000);
-        stopMinutes += ground;
-        stopPlace = leg.to;
-        rows.push(travelRow('stop', '', `${fmtDuration(ground)} ${esc(leg.note || 'Zwischenstopp')} in ${esc(leg.to)}`, ''));
+        const label = `${esc(leg.note || 'Zwischenstopp')} in ${esc(leg.to)}`;
+        if (leg.arr?.utc && next.dep?.utc) {
+          const ground = Math.round((new Date(next.dep.utc) - new Date(leg.arr.utc)) / 60000);
+          stopMinutes += ground;
+          stopPlace = leg.to;
+          rows.push(travelRow('stop', '', `${fmtDuration(ground)} ${label}`, ''));
+        } else {
+          rows.push(travelRow('stop', '', label, ''));
+        }
       }
     });
     rows.push(
