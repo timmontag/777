@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=13';
-import { renderMap } from './map.js?v=13';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=14';
+import { renderMap } from './map.js?v=14';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -115,7 +115,9 @@ function startTimeLabel(stage) {
 
 function tempLabel(stage) {
   const temp = stage.weather?.temp;
-  return typeof temp === 'number' ? `${String(temp).replace('-', '−')} °C vor Ort` : null;
+  if (typeof temp !== 'number') return null;
+  const value = `${String(temp).replace('-', '−')} °C`;
+  return stage.weather.forecast ? `erwartet ${value}` : `${value} vor Ort`;
 }
 
 function stageMeta(stage) {
@@ -151,7 +153,8 @@ function legMinutes(leg) {
 }
 
 function legTimes(leg) {
-  if (!leg.dep?.local || !leg.arr?.local) return 'neue Uhrzeiten folgen';
+  if (!leg.dep?.local) return 'neue Uhrzeiten folgen';
+  if (!leg.arr?.local) return `${fmtDay(leg.dep.date)}, Abflug ${esc(leg.dep.local)} Uhr Ortszeit`;
   return leg.dep.date === leg.arr.date
     ? `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${esc(leg.arr.local)} Uhr Ortszeit`
     : `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${fmtDay(leg.arr.date)}, ${esc(leg.arr.local)} Uhr Ortszeit`;
@@ -178,8 +181,6 @@ function renderTravel(travel, stages) {
     rows.push(travelRow('start', '', esc(travel.start.place), esc(travel.start.note || '')));
   }
 
-  let stopMinutes = 0;
-  let stopPlace = '';
   stages.forEach((stage, i) => {
     const inbound = legs.filter((l) => l.toStage === stage.id);
     inbound.forEach((leg, idx) => {
@@ -197,8 +198,6 @@ function renderTravel(travel, stages) {
         const label = `${esc(leg.note || 'Zwischenstopp')} in ${esc(leg.to)}`;
         if (leg.arr?.utc && next.dep?.utc) {
           const ground = Math.round((new Date(next.dep.utc) - new Date(leg.arr.utc)) / 60000);
-          stopMinutes += ground;
-          stopPlace = leg.to;
           rows.push(travelRow('stop', '', `${fmtDuration(ground)} ${label}`, ''));
         } else {
           rows.push(travelRow('stop', '', label, ''));
@@ -216,14 +215,11 @@ function renderTravel(travel, stages) {
     );
   });
 
-  const stat = [
-    `<strong>${legs.length} Flüge</strong>`,
-    `<strong>${fmtDuration(flightMinutes)}</strong> in der Luft`,
-    stopMinutes ? `${fmtDuration(stopMinutes)} Tankstopp in ${esc(stopPlace)}` : '',
-  ].filter(Boolean);
-
   return `
-    <p class="travel-stat">${stat.join(' <span aria-hidden="true">·</span> ')}</p>
+    <p class="travel-stat"><strong>${legs.length} Flüge</strong> <span aria-hidden="true">·</span> <strong>${fmtDuration(
+      flightMinutes
+    )}</strong> in der Luft</p>
+    ${travel.notice ? `<p class="travel-notice">${esc(travel.notice)}</p>` : ''}
     <ol class="travel-timeline">${rows.join('')}</ol>`;
 }
 
