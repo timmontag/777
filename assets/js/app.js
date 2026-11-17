@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=14';
-import { renderMap } from './map.js?v=14';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=15';
+import { renderMap } from './map.js?v=15';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -40,14 +40,16 @@ function statCard(stats) {
     </dl>`;
 }
 
-function photoGallery(photos, keyRef) {
+function photoGallery(photos) {
   if (!photos || photos.length === 0) return '';
   const figures = photos
     .map(
-      (p, i) => `
+      (p) => `
       <figure class="photo" data-src="${esc(p.file)}">
         <div class="photo-frame" aria-hidden="true"></div>
-        <img alt="${esc(p.alt)}" loading="lazy" data-photo-index="${i}" />
+        <button type="button" class="photo-open" aria-label="Foto vergrößern: ${esc(p.alt)}">
+          <img alt="${esc(p.alt)}" />
+        </button>
         <figcaption>${esc(p.alt)}</figcaption>
       </figure>`
     )
@@ -374,24 +376,45 @@ function renderContent(data) {
   gateEl.hidden = true;
   contentEl.hidden = false;
 
-  hydratePhotos();
+  hydratePhotos(document);
+  document
+    .querySelectorAll('details.rubric')
+    .forEach((d) => d.addEventListener('toggle', () => d.open && hydratePhotos(d)));
 }
 
-async function hydratePhotos() {
-  const figures = document.querySelectorAll('.photo[data-src]');
+// Fotos werden erst entschlüsselt, wenn ihre Rubrik aufgeklappt ist – sonst
+// lädt jeder Besucher alle Bilder, auch die er nie ansieht.
+async function hydratePhotos(scope) {
+  const figures = scope.querySelectorAll('.photo[data-src]:not(.loading):not(.loaded):not(.error)');
   for (const fig of figures) {
+    if (fig.closest('details:not([open])')) continue;
+    fig.classList.add('loading');
     const src = fig.getAttribute('data-src');
     const img = fig.querySelector('img');
     try {
       const blob = await decryptPhoto(cryptoKey, `assets/data/photos/${src}`);
       img.src = URL.createObjectURL(blob);
-      fig.classList.add('loaded');
+      fig.classList.replace('loading', 'loaded');
     } catch (err) {
-      fig.classList.add('error');
+      fig.classList.replace('loading', 'error');
       console.error('Foto konnte nicht entschlüsselt werden:', src, err);
     }
   }
 }
+
+const lightbox = document.getElementById('lightbox');
+
+document.addEventListener('click', (e) => {
+  const fig = e.target.closest('.photo-open')?.closest('.photo.loaded');
+  if (!fig) return;
+  const img = fig.querySelector('img');
+  document.getElementById('lightbox-img').src = img.src;
+  document.getElementById('lightbox-img').alt = img.alt;
+  document.getElementById('lightbox-caption').textContent = img.alt;
+  lightbox.showModal();
+});
+
+lightbox.addEventListener('click', () => lightbox.close());
 
 gateForm.addEventListener('submit', async (e) => {
   e.preventDefault();
