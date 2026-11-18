@@ -55,7 +55,7 @@ async function deriveKey(password, meta) {
     baseKey,
     { name: 'AES-GCM', length: meta.keyLength },
     false,
-    ['encrypt']
+    ['encrypt', 'decrypt']
   );
 }
 
@@ -63,6 +63,17 @@ async function encryptBytes(key, bytes) {
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const ciphertext = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, bytes));
   return { iv, ciphertext };
+}
+
+async function unchanged(key, encPath, bytes) {
+  if (!existsSync(encPath)) return false;
+  const enc = readFileSync(encPath);
+  try {
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: enc.subarray(0, 12) }, key, enc.subarray(12));
+    return Buffer.from(plain).equals(bytes);
+  } catch {
+    return false; // anderes Passwort oder beschädigt: neu schreiben
+  }
 }
 
 function collectPhotoRefs(content) {
@@ -111,10 +122,14 @@ async function run() {
       process.exit(1);
     }
     const bytes = readFileSync(join(photosDir, ref.file));
-    const { iv, ciphertext } = await encryptBytes(key, bytes);
     const encName = `${ref.file}.enc`;
-    writeFileSync(join(PHOTOS_OUT_DIR, encName), Buffer.concat([Buffer.from(iv), Buffer.from(ciphertext)]));
+    const encPath = join(PHOTOS_OUT_DIR, encName);
     ref.file = encName; // Referenz im JSON zeigt jetzt auf die verschlüsselte Datei
+    // Unverändertes Foto nicht neu verschlüsseln: frische IVs ergäben sonst bei
+    // jedem Lauf andere Bytes und das Repo wüchse mit jeder Veröffentlichung.
+    if (await unchanged(key, encPath, bytes)) continue;
+    const { iv, ciphertext } = await encryptBytes(key, bytes);
+    writeFileSync(encPath, Buffer.concat([Buffer.from(iv), Buffer.from(ciphertext)]));
     console.log(`Foto verschlüsselt: ${encName}`);
   }
 
