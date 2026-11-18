@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=15';
-import { renderMap } from './map.js?v=15';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=16';
+import { renderMap } from './map.js?v=16';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -155,6 +155,7 @@ function legMinutes(leg) {
 }
 
 function legTimes(leg) {
+  if (!leg.dep?.local && leg.arr?.local) return `${fmtDay(leg.arr.date)}, Landung ${esc(leg.arr.local)} Uhr Ortszeit`;
   if (!leg.dep?.local) return 'neue Uhrzeiten folgen';
   if (!leg.arr?.local) return `${fmtDay(leg.dep.date)}, Abflug ${esc(leg.dep.local)} Uhr Ortszeit`;
   return leg.dep.date === leg.arr.date
