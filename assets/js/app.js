@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=16';
-import { renderMap } from './map.js?v=16';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=17';
+import { renderMap } from './map.js?v=17';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -154,9 +154,9 @@ function legMinutes(leg) {
     : leg.minutes;
 }
 
-function legTimes(leg) {
+function legTimes(leg, past) {
   if (!leg.dep?.local && leg.arr?.local) return `${fmtDay(leg.arr.date)}, Landung ${esc(leg.arr.local)} Uhr Ortszeit`;
-  if (!leg.dep?.local) return 'neue Uhrzeiten folgen';
+  if (!leg.dep?.local) return past ? 'genaue Uhrzeiten nicht bekannt' : 'neue Uhrzeiten folgen';
   if (!leg.arr?.local) return `${fmtDay(leg.dep.date)}, Abflug ${esc(leg.dep.local)} Uhr Ortszeit`;
   return leg.dep.date === leg.arr.date
     ? `${fmtDay(leg.dep.date)}, ${esc(leg.dep.local)} → ${esc(leg.arr.local)} Uhr Ortszeit`
@@ -192,7 +192,7 @@ function renderTravel(travel, stages) {
           'leg',
           PLANE_ICON,
           `${fmtDuration(legMinutes(leg))} <span class="travel-route">${esc(leg.from)} → ${esc(leg.to)}</span>`,
-          legTimes(leg)
+          legTimes(leg, stage.status === 'done')
         )
       );
       const next = inbound[idx + 1];
