@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=18';
-import { renderMap } from './map.js?v=18';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=19';
+import { renderMap } from './map.js?v=19';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -37,7 +37,14 @@ function statCard(stats) {
         </div>`
         )
         .join('')}
-    </dl>`;
+    </dl>${officialResult(stats?.official)}`;
+}
+
+// Offizielles Ergebnis des Veranstalters, unter der Uhr-Statistik
+function officialResult(official) {
+  if (!official?.zeit) return '';
+  const place = official.platz && official.von ? ` · <span class="nowrap">Platz ${esc(official.platz)} von ${esc(official.von)}</span>` : '';
+  return `<p class="stat-official"><span class="nowrap">Offizielles Ergebnis: <strong>${esc(official.zeit)} h</strong></span>${place}</p>`;
 }
 
 function photoGallery(photos) {
