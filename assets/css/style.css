@@ -755,6 +755,22 @@ details.rubric[open] .rubric-chevron {
   font-size: 0.95rem;
 }
 
+/* Gehört direkt unter die Stat-Karte */
+.stat-official {
+  margin: -0.5rem 0 0.9rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.stat-official strong {
+  color: var(--text);
+}
+
+.stat-official .nowrap {
+  white-space: nowrap;
+}
+
 /* Fotos */
 .photo-gallery {
   display: grid;
