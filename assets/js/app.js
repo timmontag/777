@@ -1,5 +1,5 @@
-import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=19';
-import { renderMap } from './map.js?v=19';
+import { tryUnlock, tryUnlockWithCachedKey, cacheKey, decryptPhoto } from './crypto.js?v=20';
+import { renderMap } from './map.js?v=20';
 
 const gateEl = document.getElementById('password-gate');
 const gateForm = document.getElementById('password-form');
@@ -126,7 +126,10 @@ function tempLabel(stage) {
   const temp = stage.weather?.temp;
   if (typeof temp !== 'number') return null;
   const humidity = stage.weather.humidity;
-  const value = `${String(temp).replace('-', '−')} °C` + (typeof humidity === 'number' ? `, ${humidity} % Luftfeuchte` : '');
+  const max = stage.weather.tempMax;
+  const fmt = (t) => String(t).replace('-', '−');
+  const range = typeof max === 'number' ? `${fmt(temp)} bis ${fmt(max)} °C` : `${fmt(temp)} °C`;
+  const value = range + (typeof humidity === 'number' ? `, ${humidity} % Luftfeuchte` : '');
   return stage.weather.forecast ? `erwartet ${value}` : `${value} vor Ort`;
 }
 
